@@ -754,6 +754,7 @@ impl Platform for MacPlatform {
 
         let done_tx = Cell::new(Some(done_tx));
         let handler = RcBlock::new(move |error: *mut NSError| {
+            // SAFETY: NSError is valid for the duration of this completion handler
             let result = if let Some(error) = unsafe { error.as_ref() } {
                 Err(anyhow::anyhow!(
                     "Failed to register: {}",
